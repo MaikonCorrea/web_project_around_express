@@ -6,7 +6,7 @@ router.get("/", (req, res) => {
   const file = path.join(__dirname, "../data/users.json");
   fs.readFile(file, (err, data) => {
     if (err) {
-      res.status(500).json({ error: 'Erro na leitura do arquivo de usuários' });
+      res.status(500).json({ error: "Erro na leitura do arquivo de usuários" });
       return;
     }
     const users = JSON.parse(data);
