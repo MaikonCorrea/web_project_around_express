@@ -1,15 +1,15 @@
-const router = require("express").Router();
-const fs = require("fs");
-const path = require("path");
+const router = require('express').Router();
+const fs = require('fs');
+const path = require('path');
 
-const file = path.join(__dirname, "..", "data", "cards.json");
+const file = path.join(__dirname, '..', 'data', 'cards.json');
 
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   fs.readFile(file, (err, data) => {
     if (err) {
       res
         .status(500)
-        .json({ message: "Erro na leitura do arquivo de cartões" });
+        .json({ message: 'Erro na leitura do arquivo de cartões' });
       return;
     }
     const cards = JSON.parse(data);

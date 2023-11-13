@@ -17,12 +17,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^(https?:\/\/)?(www\.)?[a-zA-Z0-9._~:/?%#[\]@!$&'()*+,;=]+#?$/;
       },
-      message: props => `${props.value} não é um link de avatar válido!`
-    }
-  }
+      message: (props) => `${props.value} não é um link de avatar válido!`,
+    },
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);
