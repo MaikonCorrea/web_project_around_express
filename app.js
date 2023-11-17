@@ -11,7 +11,12 @@ connectDatabase();
 
 app.use(bodyParser.json());
 
-
+app.use((req, res, next) => {
+  req.user = {
+    _id: '6557b55548d2c1cf8c0b72db',
+  };
+  next();
+});
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
