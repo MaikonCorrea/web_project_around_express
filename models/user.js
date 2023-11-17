@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema({
       message: (props) => `${props.value} não é um link de avatar válido!`,
     },
   },
+}, {
+  versionKey: false,
 });
 
 module.exports = mongoose.model('user', userSchema);
