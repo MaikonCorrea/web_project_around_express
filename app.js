@@ -1,7 +1,8 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const bodyParser = require('body-parser');
+
 const { PORT = 3000 } = process.env;
 const connectDatabase = require('./data/database');
 
