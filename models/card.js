@@ -11,7 +11,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      vvalidator: function validateLinkURL(v) {
+      validator: function validateLinkURL(v) {
         return /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-._~:/?%#[\]@!$&'()*+,;=]+#?$/.test(v);
       },
       message: (props) => `${props.value} não é um link de imagem válido!`,
