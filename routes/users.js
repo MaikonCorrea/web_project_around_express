@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { listUsers, createUser } = require('../controllers/users');
+const CustomError = require('../errors/CustomError');
 
 router.get('/', async (req, res) => {
   const users = await listUsers();
@@ -10,20 +11,33 @@ router.get('/:id', async (req, res) => {
   try {
     const users = await listUsers();
     const user = users.find((u) => u._id.toString() === req.params.id);
-
     if (!user) {
-      return res.status(404).json({ error: 'Usuário não encontrado' });
+      throw new CustomError('Usuário não encontrado', 'NotFoundError', 404);
     }
-    return res.json(user);
+    res.json(user);
   } catch (error) {
-    return res.status(500).json({ error: 'Erro interno do servidor' });
+    res.status(error.statusCode || 500).json({
+      message: error.message,
+      type: error.name,
+      status: error.statusCode || 500,
+    });
   }
 });
 
 router.post('/', async (req, res) => {
   const { body } = req;
-  const newUser = await createUser(body);
-  res.status(201).json(newUser);
+  try {
+    const newUser = await createUser(body);
+    res.status(200).json(newUser);
+  } catch (error) {
+    res
+      .status(error.statusCode)
+      .json({
+        message: error.message,
+        type: error.name,
+        Status: error.statusCode,
+      });
+  }
 });
 
 module.exports = router;
