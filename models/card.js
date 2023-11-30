@@ -3,22 +3,16 @@ const mongoose = require('mongoose');
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
+    required: [true, 'O campo name precisa ser preenchido'],
+    minlength: [2, 'O nome deve ter pelo menos 2 caracteres'],
+    maxlength: [30, 'O nome não pode ter mais de 30 caracteres'],
   },
   link: {
     type: String,
     required: true,
-    validate: {
-      validator: function validateLinkURL(v) {
-        return /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-._~:/?%#[\]@!$&'()*+,;=]+#?$/.test(v);
-      },
-      message: (props) => `${props.value} não é um link de imagem válido!`,
-    },
   },
   owner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
   },
   likes: {
