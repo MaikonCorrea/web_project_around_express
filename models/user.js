@@ -3,25 +3,19 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    require: true,
-    minlength: 2,
-    maxlength: 30,
+    required: [true, 'O campo name precisa ser preenchido'],
+    minlength: [2, 'O nome deve ter pelo menos 2 caracteres'],
+    maxlength: [30, 'O nome não pode ter mais de 30 caracteres'],
   },
   about: {
     type: String,
-    require: true,
-    minlength: 2,
-    maxlength: 30,
+    required: [true, 'O campo about precisa ser preenchido'],
+    minlength: [2, 'O campo about deve ter pelo menos 2 caracteres'],
+    maxlength: [30, 'O campo about não pode ter mais de 30 caracteres'],
   },
   avatar: {
     type: String,
     required: true,
-    validate: {
-      validator: function validateAvatarURL(v) {
-        return /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-._~:/?%#[\]@!$&'()*+,;=]+#?$/.test(v);
-      },
-      message: (props) => `${props.value} não é um link de avatar válido!`,
-    },
   },
 }, {
   versionKey: false,
