@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
@@ -9,20 +8,20 @@ const connectDatabase = require('./data/database');
 const app = express();
 connectDatabase();
 
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6557b55548d2c1cf8c0b72db',
-  };
+const authMiddleware = async (req, res, next) => {
+  req.user = { _id: '6557b55548d2c1cf8c0b72db' };
   next();
-});
+};
+
+app.use(authMiddleware);
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
 app.use('/', (req, res, next) => {
-  res.status(404).json({ message: 'A solicitação não foi encontrada' });
+  res.status(404).json({ message: 'A solicitação não foi encontrada', status: 404 });
   next();
 });
 
