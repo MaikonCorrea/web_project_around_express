@@ -44,10 +44,9 @@ module.exports = {
         const updatedUser = await existingUser.save();
         return updatedUser;
       }
-
       throw new CustomError('Nenhum dado válido fornecido para atualização!', 'InvalidDataError', 400);
     } catch (error) {
-      if (error.avatar instanceof CustomError) {
+      if (Object.keys(error.errors).length > 0) {
         const field = Object.keys(error.errors)[0];
         const { message } = error.errors[field];
         throw new CustomError(message, 'ValidationError', 400);
