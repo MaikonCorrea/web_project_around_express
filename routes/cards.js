@@ -1,5 +1,7 @@
 const router = require('express').Router();
-const { listCards, createCard, deleteCard } = require('../controllers/cards');
+const {
+  listCards, createCard, deleteCard, likeCard, unlikeCard,
+} = require('../controllers/cards');
 const CustomError = require('../errors/CustomError');
 
 router.get('/', async (req, res, next) => {
@@ -35,10 +37,38 @@ router.delete('/:id', async (req, res) => {
     const cardExists = cards.some((card) => card.id === cardId);
 
     if (!cardExists) {
-      throw new CustomError('ID não encontrado na lista de cartões', 'Not Found', 404);
+      throw new CustomError('Card não encontrado!', 'CardNotFoundError', 404);
     }
     const deletedCard = await deleteCard(cardId);
     res.status(204).send(deletedCard);
+  } catch (error) {
+    res
+      .status(error.statusCode)
+      .json({
+        message: error.message,
+        type: error.name,
+        Status: error.statusCode,
+      });
+  }
+});
+
+router.put('/:cardId/likes', async (req, res) => {
+  try {
+    await likeCard(req, res);
+  } catch (error) {
+    res
+      .status(error.statusCode)
+      .json({
+        message: error.message,
+        type: error.name,
+        Status: error.statusCode,
+      });
+  }
+});
+
+router.delete('/:cardId/likes', async (req, res) => {
+  try {
+    await unlikeCard(req, res);
   } catch (error) {
     res
       .status(error.statusCode)
