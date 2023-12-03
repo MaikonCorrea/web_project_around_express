@@ -25,7 +25,7 @@ module.exports = {
       const saveCard = await newCard.save();
       return saveCard;
     } catch (error) {
-      if (error.name === 'ValidationError') {
+      if (error instanceof CustomError) {
         const field = Object.keys(error.errors)[0];
         const { message } = error.errors[field].message;
         throw new CustomError(message, 'ValidationError', 400);
@@ -39,4 +39,47 @@ module.exports = {
     const deletedCard = await Card.findByIdAndDelete(id);
     return deletedCard;
   },
+
+  likeCard: async (req, res) => {
+    try {
+      const { cardId } = req.params;
+      const userId = req.user._id;
+
+      const updatedCard = await Card.findByIdAndUpdate(
+        cardId,
+        { $addToSet: { likes: userId } }, // Adiciona userId ao array se ele não estiver lá
+        { new: true },
+      );
+
+      res.status(200).json(updatedCard);
+    } catch (error) {
+      res.status(error.statusCode).json({
+        message: error.message,
+        type: error.name,
+        status: error.statusCode,
+      });
+    }
+  },
+
+  unlikeCard: async (req, res) => {
+    try {
+      const { cardId } = req.params;
+      const userId = req.user._id;
+
+      const updatedCard = await Card.findByIdAndUpdate(
+        cardId,
+        { $pull: { likes: userId } }, // Remove userId do array
+        { new: true },
+      );
+
+      res.status(200).json(updatedCard);
+    } catch (error) {
+      res.status(error.statusCode).json({
+        message: error.message,
+        type: error.name,
+        status: error.statusCode,
+      });
+    }
+  },
+
 };
