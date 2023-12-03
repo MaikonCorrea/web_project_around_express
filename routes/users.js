@@ -1,5 +1,7 @@
 const router = require('express').Router();
-const { listUsers, createUser } = require('../controllers/users');
+const {
+  listUsers, createUser, updateProfile, updateUserAvatar,
+} = require('../controllers/users');
 const CustomError = require('../errors/CustomError');
 
 router.get('/', async (req, res) => {
@@ -16,10 +18,10 @@ router.get('/:id', async (req, res) => {
     }
     res.json(user);
   } catch (error) {
-    res.status(error.statusCode || 500).json({
+    res.status(error.statusCode).json({
       message: error.message,
       type: error.name,
-      status: error.statusCode || 500,
+      status: error.statusCode,
     });
   }
 });
@@ -29,6 +31,52 @@ router.post('/', async (req, res) => {
   try {
     const newUser = await createUser(body);
     res.status(200).json(newUser);
+  } catch (error) {
+    res
+      .status(error.statusCode)
+      .json({
+        message: error.message,
+        type: error.name,
+        Status: error.statusCode,
+      });
+  }
+});
+
+router.patch('/:id', async (req, res) => {
+  const userId = req.params.id;
+  const updatedData = req.body;
+
+  try {
+    const users = await listUsers();
+    const existingUser = users.some((user) => user.id === userId);
+    if (!existingUser) {
+      throw new CustomError('Usuário não encontrado!', 'UserNotFoundError', 404);
+    }
+    const updatedUserNew = await updateProfile(userId, updatedData);
+    res.status(200).json(updatedUserNew);
+  } catch (error) {
+    res
+      .status(error.statusCode)
+      .json({
+        message: error.message,
+        type: error.name,
+        Status: error.statusCode,
+      });
+  }
+});
+
+router.patch('/:id/avatar', async (req, res) => {
+  const userId = req.params.id;
+  const updatedData = req.body;
+
+  try {
+    const users = await listUsers();
+    const existingUser = users.some((user) => user.id === userId);
+    if (!existingUser) {
+      throw new CustomError('Usuário não encontrado!', 'UserNotFoundError', 404);
+    }
+    const updateAvatarNew = await updateUserAvatar(userId, updatedData);
+    res.status(200).json(updateAvatarNew);
   } catch (error) {
     res
       .status(error.statusCode)
