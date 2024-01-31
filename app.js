@@ -21,7 +21,7 @@ app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
 app.use('/', (req, res, next) => {
-  res.status(404).json({ message: 'A solicitação não foi encontrada', status: 404 });
+  res.status(404).json({ message: 'A solicitação não foi encontrada mesmo', status: 404 });
   next();
 });
 
